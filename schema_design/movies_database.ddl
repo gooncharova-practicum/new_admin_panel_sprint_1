@@ -6,14 +6,14 @@ CREATE TABLE IF NOT EXISTS content.film_work (
     description TEXT, 
     creation_date DATE, 
     rating FLOAT, 
-    type TEXT NOT NULL, 
+    type TEXT CHECK (type IN ('tv_show', 'movie')) NOT NULL, 
     created timestamp with time zone, 
     modified timestamp with time zone
 );
 
 CREATE TABLE IF NOT EXISTS content.genre (
     id uuid PRIMARY KEY, 
-    name TEXT NOT NULL, 
+    name TEXT NOT NULL UNIQUE, 
     description TEXT, 
     created timestamp with time zone, 
     modified timestamp with time zone
@@ -43,4 +43,4 @@ CREATE TABLE IF NOT EXISTS content.person_film_work (
 
 CREATE INDEX IF NOT EXISTS film_work_creation_date_idx ON content.film_work(creation_date); 
 CREATE INDEX IF NOT EXISTS person_full_name_idx ON content.person(full_name);
-CREATE INDEX  IF NOT EXISTS genre_name_idx ON content.genre(name);
+CREATE INDEX IF NOT EXISTS genre_name_idx ON content.genre(name);

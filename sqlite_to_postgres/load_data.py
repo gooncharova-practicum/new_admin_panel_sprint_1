@@ -1,8 +1,23 @@
 import sqlite3
+import datetime
 
 import psycopg2
 from psycopg2.extensions import connection as _connection
 from psycopg2.extras import DictCursor
+
+
+import uuid
+from dataclasses import dataclass, field
+
+
+@dataclass
+class FilmWork:
+    title: str
+    description: str
+    creation_date: datetime.date
+    rating: float = field(default=0.0)
+    id: uuid.UUID = field(default_factory=uuid.uuid4)
+    # file_path
 
 
 def load_from_sqlite(connection: sqlite3.Connection, pg_conn: _connection):
@@ -12,6 +27,14 @@ def load_from_sqlite(connection: sqlite3.Connection, pg_conn: _connection):
 
     # data = sqlite_extractor.extract_movies()
     # postgres_saver.save_all_data(data)
+
+
+def write_to_postgres(conn: psycopg2.extensions.connection, film_work: FilmWork):
+    pass
+
+
+def main():
+    pass
 
 
 if __name__ == '__main__':

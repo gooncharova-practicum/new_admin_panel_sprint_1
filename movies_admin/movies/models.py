@@ -46,15 +46,25 @@ class Person(UUIDMixin, TimeStampedMixin):
 
 
 class FilmWork(UUIDMixin, TimeStampedMixin):
+
+    TV_SHOW = 'TV'
+    MOVIE = 'MV'
+    TYPES = [
+        (TV_SHOW, _('tv_show')),
+        (MOVIE, _('movie')),
+    ]
+
     title = models.CharField(_('title'), max_length=255)
     description = models.TextField(_('description'), blank=True)
     creation_date = models.DateField(_('creation_date'))
     rating = models.FloatField(_('raiting'), blank=True,
                                validators=[MinValueValidator(0.0),
                                            MaxValueValidator(100.0)])
-    type = models.CharField(_('type'), max_length=255)
+    type = models.CharField(_('type'), choices=TYPES, max_length=255)
     genres = models.ManyToManyField(Genre, through='GenreFilmwork')
     persons = models.ManyToManyField(Person, through='PersonFilmwork')
+    file_path = models.FileField(_('file'), blank=True,
+                                 null=True, upload_to='movies/')
 
     class Meta:
         db_table = "content\".\"film_work"
@@ -87,7 +97,7 @@ class PersonFilmwork(UUIDMixin):
     person = models.ForeignKey('Person',
                                verbose_name=_('person'),
                                on_delete=models.CASCADE)
-    role = models.TextField(_('role'), null=True)
+    role = models.TextField(_('role'))
     created = models.DateTimeField(_('created'), auto_now_add=True)
 
     class Meta:
