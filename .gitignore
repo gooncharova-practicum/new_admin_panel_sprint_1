@@ -25,3 +25,5 @@ var/
 .venv 
 venv/ 
 venv.bak/ 
+
+.env
