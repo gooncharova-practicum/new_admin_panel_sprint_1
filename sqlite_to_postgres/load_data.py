@@ -1,15 +1,17 @@
 import os
 import sqlite3
+from contextlib import contextmanager
 
 import psycopg2
-
-from contextlib import contextmanager
+from dotenv import load_dotenv
 from psycopg2.extensions import connection as _connection
 from psycopg2.extras import DictCursor
 
-from .write_data import write_to_postgres
-from .sqlite_reader import SQLiteExtractor
-from movies_admin.movies.models import __all__ as models
+from postgres_saver import PostgresSaver
+from sqlite_reader import SQLiteExtractor
+from utils import db_tables
+
+load_dotenv()
 
 
 @contextmanager
@@ -23,11 +25,11 @@ def conn_context(db_path: str):
 def load_from_sqlite(connection: sqlite3.Connection, pg_conn: _connection):
     """Основной метод загрузки данных из SQLite в Postgres"""
     sqlite_reader = SQLiteExtractor(connection)
-    # postgres_saver = PostgresSaver(pg_conn)
+    pg_saver = PostgresSaver(pg_conn)
 
-    for model in models:
-        data = sqlite_reader.get_data(model)
-        write_to_postgres(data)
+    for model, db_table in db_tables.items():
+        data = sqlite_reader.get_data(db_table)
+        pg_saver.save_data(model, data, db_table)
 
 
 if __name__ == '__main__':

@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True, verbose_name='created')),
                 ('modified', models.DateTimeField(auto_now=True, verbose_name='modified')),
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255, verbose_name='name')),
+                ('name', models.CharField(max_length=255, verbose_name='name', unique=True)),
                 ('description', models.TextField(blank=True, verbose_name='description')),
             ],
             options={
