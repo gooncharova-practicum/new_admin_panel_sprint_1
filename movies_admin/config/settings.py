@@ -20,7 +20,12 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = os.environ.get('DEBUG', False) == 'True'
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = []
+allowed_hosts = os.environ.get('ALLOWED_HOSTS', ['127.0.0.1'])
+
+
+if allowed_hosts:
+    ALLOWED_HOSTS = allowed_hosts.split(',')
 
 ROOT_URLCONF = 'config.urls'
 
@@ -42,8 +47,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOCALE_PATHS = ['movies/locale']
 
-INTERNAL_IPS = [
-    # ...
-    "127.0.0.1",
-    # ...
-]
+INTERNAL_IPS = os.environ.get('INTERNAL_IPS', ['127.0.0.1'])

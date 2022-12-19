@@ -15,8 +15,11 @@ class PostgresSaver:
         self.logger = getLogger()
 
     def save_data(self, model, data, db_table):
-        count = 0
+        count_sqlite_rows = 0
+        count_inserted_rows = 0
+
         for raw_row in data:
+            count_inserted_rows += 1
             raw_dict_row = dict(raw_row)
             row = get_right_dict_keys(raw_dict_row)
             query = self.__get_query(db_table, model, 'id')
@@ -27,7 +30,7 @@ class PostgresSaver:
                                               (values_for_insert, ))
                 rowcount = self.cursor.rowcount
                 self.connection.commit()
-                count += rowcount
+                count_sqlite_rows += rowcount
 
             except psycopg2.errors.UniqueViolation as unique_error:
                 # можно 2 ошибки одновременно обработать
@@ -37,7 +40,7 @@ class PostgresSaver:
             except psycopg2.IntegrityError as error:
                 self.logger.error(f'{error} in row {raw_dict_row}')
 
-        self.logger.debug(f'Data insertion complited. Inserted {count} rows from {len(data)}')
+        self.logger.debug(f'Data insertion complited. Inserted {count_inserted_rows} rows from {count_sqlite_rows}')
 
     def get_values_for_insert(self, model, row):
         return astuple(model(**row))

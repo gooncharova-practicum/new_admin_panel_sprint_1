@@ -30,6 +30,10 @@ class Genre(UUIDMixin, TimeStampedMixin):
 
     class Meta:
         db_table = "content\".\"genre"
+        indexes = [
+            models.Index(fields=['name'],
+                         name='genre_name_idx'),
+        ]
         verbose_name = _('Genre')
         verbose_name_plural = _('Genres')
 
@@ -42,6 +46,10 @@ class Person(UUIDMixin, TimeStampedMixin):
 
     class Meta:
         db_table = "content\".\"person"
+        indexes = [
+            models.Index(fields=['full_name'],
+                         name='person_full_name_idx'),
+        ]
         verbose_name = _('Person')
         verbose_name_plural = _('Persons')
 
@@ -72,6 +80,10 @@ class FilmWork(UUIDMixin, TimeStampedMixin):
 
     class Meta:
         db_table = "content\".\"film_work"
+        indexes = [
+            models.Index(fields=['creation_date'],
+                         name='film_work_creation_date_idx'),
+        ]
         verbose_name = _('Film work')
         verbose_name_plural = _('Film works')
 
